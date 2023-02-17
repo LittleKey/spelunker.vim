@@ -67,6 +67,26 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 	return l:word_list
 endfunction
 
+function! s:has_prefix_in_prefix_list(word, prefix_list)
+  for l:prefix in a:prefix_list
+    if stridx(a:word, l:prefix) == 0
+      return 1
+    endif
+  endfor
+
+	return 0
+endfunction
+
+function! s:has_suffix_in_suffix_list(word, suffix_list)
+  for l:suffix in a:suffix_list
+    if stridx(a:word, l:suffix) + strlen(l:suffix) == strlen(a:word)
+      return 1
+    endif
+  endfor
+
+	return 0
+endfunction
+
 " word_listから、misspelledなワードだけを返す
 function! s:filter_spell_bad_list(word_list)
 	let l:spell_bad_list  = []
@@ -87,10 +107,32 @@ function! s:filter_spell_bad_list(word_list)
 		" 読み捨て
 	endtry
 
+	let l:prefix_white_list_for_user = []
+	try
+		execute 'let l:prefix_white_list_for_user = g:spelunker_prefix_white_list_for_user'
+	catch
+		" 読み捨て
+	endtry
+
+	let l:suffix_white_list_for_user = []
+	try
+		execute 'let l:suffix_white_list_for_user = g:spelunker_suffix_white_list_for_user'
+	catch
+		" 読み捨て
+	endtry
+
 	let l:spelunker_white_list = spelunker#utils#filter_list_char_length(g:spelunker_white_list)
 
 	for orig_word in spelunker#utils#filter_list_char_length(a:word_list)
 		let l:lowercase_word = tolower(orig_word)
+
+    if s:has_prefix_in_prefix_list(l:lowercase_word, l:prefix_white_list_for_user) == 1
+      continue
+    endif
+
+    if s:has_suffix_in_suffix_list(l:lowercase_word, l:suffix_white_list_for_user) == 1
+      continue
+    endif
 
 		if index(l:spelunker_white_list, l:lowercase_word) >= 0 ||
 			\ index(l:white_list_for_lang, l:lowercase_word) >= 0 ||
