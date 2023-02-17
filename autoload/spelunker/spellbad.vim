@@ -14,7 +14,7 @@ function! spelunker#spellbad#get_spell_bad_list(window_text_list)
 
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
 	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
-	"	      ただし、match_id_dictをglobalにする必要あり
+	"       ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(a:window_text_list)
 
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
