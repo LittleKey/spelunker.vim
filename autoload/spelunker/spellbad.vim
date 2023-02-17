@@ -14,7 +14,7 @@ function! spelunker#spellbad#get_spell_bad_list(window_text_list)
 
 	" spellgood で対象から外れる場合もあるので、全部チェックする必要があり
 	" NOTE: spellgood系操作でmatch_id_dictから消してあげたらチェック不要になる。
-	"       ただし、match_id_dictをglobalにする必要あり
+	"				ただし、match_id_dictをglobalにする必要あり
 	let l:word_list = s:get_word_list(a:window_text_list)
 
 	let l:current_spell_setting = spelunker#get_current_spell_setting()
@@ -68,28 +68,28 @@ function! spelunker#spellbad#get_word_list_in_line(line, word_list)
 endfunction
 
 function! s:has_prefix_in_prefix_list(word, prefix_list)
-  for l:prefix in a:prefix_list
-    if stridx(a:word, l:prefix) == 0
-      return 1
-    endif
-  endfor
+	for l:prefix in a:prefix_list
+		if stridx(a:word, l:prefix) == 0
+			return 1
+		endif
+	endfor
 
 	return 0
 endfunction
 
 function! s:has_suffix_in_suffix_list(word, suffix_list)
-  for l:suffix in a:suffix_list
-    if stridx(a:word, l:suffix) + strlen(l:suffix) == strlen(a:word)
-      return 1
-    endif
-  endfor
+	for l:suffix in a:suffix_list
+		if stridx(a:word, l:suffix) + strlen(l:suffix) == strlen(a:word)
+			return 1
+		endif
+	endfor
 
 	return 0
 endfunction
 
 " word_listから、misspelledなワードだけを返す
 function! s:filter_spell_bad_list(word_list)
-	let l:spell_bad_list  = []
+	let l:spell_bad_list	= []
 
 	" 言語別ホワイトリストの取得
 	let l:white_list_for_lang = []
@@ -126,13 +126,13 @@ function! s:filter_spell_bad_list(word_list)
 	for orig_word in spelunker#utils#filter_list_char_length(a:word_list)
 		let l:lowercase_word = tolower(orig_word)
 
-    if s:has_prefix_in_prefix_list(l:lowercase_word, l:prefix_white_list_for_user) == 1
-      continue
-    endif
+		if s:has_prefix_in_prefix_list(l:lowercase_word, l:prefix_white_list_for_user) == 1
+			continue
+		endif
 
-    if s:has_suffix_in_suffix_list(l:lowercase_word, l:suffix_white_list_for_user) == 1
-      continue
-    endif
+		if s:has_suffix_in_suffix_list(l:lowercase_word, l:suffix_white_list_for_user) == 1
+			continue
+		endif
 
 		if index(l:spelunker_white_list, l:lowercase_word) >= 0 ||
 			\ index(l:white_list_for_lang, l:lowercase_word) >= 0 ||
